@@ -1,0 +1,10 @@
+Why the app cant start:
+error:
+
+System.AggregateException: 'Some services are not able to be constructed (Error while validating the service descriptor 'ServiceType: MovieRental.Rental.IRentalFeatures Lifetime: Singleton ImplementationType: MovieRental.Rental.RentalFeatures': Cannot consume scoped service 'MovieRental.Data.MovieRentalDbContext' from singleton 'MovieRental.Rental.IRentalFeatures'.)'
+answer:
+The app fails to start because MovieRentalDbContext is registered as a scoped service, but RentalFeatures was registered as a singleton and depends on it.
+
+You cannot inject a scoped service into a singleton, because scoped services are created per request, while singletons are created only once for the application's lifetime.
+
+To fix this, we changed the registration of RentalFeatures to scoped, matching the lifetime of MovieRentalDbContext. After this change, the app starts successfully.
